@@ -1,0 +1,14 @@
+Classifier			:	Random Forest
+Number of trees		:	1000
+Features extracted	:	Timeseries features using tsfresh
+Feature Selection	:	mutual information
+Number of features	:	100
+Number of classes	:	47
+ACCURACY			:	92%
+
+Classifier			:	SVM linear kernel
+Features extracted	:	Timeseries features using tsfresh
+Feature Selection	:	mutual information
+Number of features	:	200
+Number of classes	:	47
+ACCURACY			:	90.42%
