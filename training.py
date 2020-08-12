@@ -10,8 +10,6 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import pickle
 
-from imblearn.over_sampling import SMOTE
-from pandas.tools.plotting import table
 from sklearn.metrics import classification_report
 
 from sklearn.ensemble import RandomForestClassifier

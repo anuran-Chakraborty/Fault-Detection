@@ -7,11 +7,10 @@ import pickle
 import pandas as pd
 import numpy as np
 
-
 # Load the model
 model=load_model('single_pd.h5')
 # Load the data
-df=pd.read_csv('multi_pd.csv',header=None)
+df=pd.read_csv('single_test.csv',header=None)
 
 df_X=df.iloc[:,:-1]
 df_Y=df.iloc[:,-1]

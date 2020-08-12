@@ -9,6 +9,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
 import pickle
 
+from xgboost import XGBClassifier
+
 from imblearn.over_sampling import SMOTE
 from pandas.tools.plotting import table
 from sklearn.metrics import classification_report
@@ -21,7 +23,7 @@ from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 
 filter_method=mutual_info_classif
-num_of_features=200
+num_of_features=300
 
 def predict(x,Y,model_file):
 
@@ -38,7 +40,7 @@ def random_forest(x,y):
 	classifier = RandomForestClassifier(n_estimators = 1500, n_jobs=-1, verbose=2)
 	classifier.fit(x,y)
 
-	f = open('randomforest.pickle','wb')
+	f = open('rf.pickle','wb')
 	pickle.dump(classifier,f)
 	f.close()
 
@@ -50,11 +52,11 @@ def mlp(x,y):
 	pickle.dump(classifier,f)
 	f.close()
 
-def random_forest(x,y):
-	classifier = RandomForestClassifier(n_estimators = 1500, n_jobs=-1, verbose=2)
+def xgb(x,y):
+	classifier = XGBClassifier(n_estimators = 1500, max_depth=10, n_jobs=-1, verbose=2, learning_rate=0.01)
 	classifier.fit(x,y)
 
-	f = open('randomforest.pickle','wb')
+	f = open('xgb.pickle','wb')
 	pickle.dump(classifier,f)
 	f.close()
 
@@ -67,7 +69,10 @@ def svm(x,y):
 	f.close()
 
 
+features=pd.read_csv('FeatureIndex.csv',header=None)
+
 Xtrain=pd.read_csv('train_feature.csv')
+
 Ytrain=pd.read_csv('train_target.csv',header=None)
 
 print(Xtrain.shape)
@@ -90,9 +95,15 @@ selection=pickle.load(open("feature_selection.pickle", "rb"))
 Xtrain=selection.transform(Xtrain)
 Xtest=selection.transform(Xtest)
 
+dfXtr=pd.DataFrame(Xtrain)
+dfXte=pd.DataFrame(Xtest)
+
+dfXtr.to_csv('train_selected.csv',index=False)
+dfXte.to_csv('test_selected.csv',index=False)
+
 # Train
-svm(Xtrain,Ytrain)
-predict(Xtrain,Ytrain,'svm.pickle')
-predict(Xtest,Ytest,'svm.pickle')
+xgb(Xtrain,Ytrain)
+predict(Xtrain,Ytrain,'xgb.pickle')
+predict(Xtest,Ytest,'xgb.pickle')
 
 

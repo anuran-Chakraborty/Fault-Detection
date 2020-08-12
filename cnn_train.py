@@ -10,7 +10,9 @@ import numpy as np
 import math
 from tensorflow.keras import backend as K
 
-def my_init(shape_array, partition_info, dtype=None):
+from sklearn.metrics import confusion_matrix
+
+def my_init(shape_array, dtype=None):
 
 	print(shape_array)
 
@@ -32,13 +34,13 @@ def my_init(shape_array, partition_info, dtype=None):
 
 
 # Load the train data
-df_train=pd.read_csv('train.csv',header=None)
+df_train=pd.read_csv('single_train.csv',header=None)
 X_train=df_train.iloc[:,0:-1]
 Y_train=df_train.iloc[:,-1]
 Y_train.astype(str,inplace=True)
 
 # Load the test data
-df_test=pd.read_csv('test.csv',header=None)
+df_test=pd.read_csv('single_test.csv',header=None)
 X_test=df_test.iloc[:,0:-1]
 Y_test=df_test.iloc[:,-1]
 Y_test.astype(str,inplace=True)
@@ -55,7 +57,7 @@ print(X_test.shape)
 
 num_train=X_train.shape[0]
 num_test=X_test.shape[0]
-num_classes=47
+num_classes=27
 
 # Reshape train and test
 X_train=X_train.reshape(num_train,2500,5,1)
@@ -71,10 +73,10 @@ model=Sequential()
 
 #add model layers
 # kernel_initializer = my_init
-model.add(Conv2D(15, kernel_size=(5,1), strides=(1,1), activation='tanh', activity_regularizer=l2(0.001), input_shape=(2500,5,1)))
+model.add(Conv2D(15, kernel_size=(5,1), strides=(1,1), activation='relu', activity_regularizer=l2(0.001), input_shape=(2500,5,1)))
 # model.add(MaxPooling2D(pool_size =(2, 1)))
 
-model.add(Conv2D(10, kernel_size=(5,1), activation='tanh', activity_regularizer=l2(0.001)))
+model.add(Conv2D(10, kernel_size=(5,1), activation='relu', activity_regularizer=l2(0.001)))
 # model.add(Conv2D(7, kernel_size=(5,1), activation='relu'))
 # model.add(Dropout(0.2))
 # model.add(Conv2D(15, kernel_size=(2,1), activation='relu'))
@@ -87,7 +89,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 
 #train the model
 
-model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=500)
+model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=100)
 
 model.save('single_pd.h5')
 
@@ -95,4 +97,10 @@ model.save('single_pd.h5')
 scores = model.evaluate(X_test, y_test, verbose=0)
 print('%s: %.2f%%' % (model.metrics_names[1], scores[1]*100))
 
+y_pred = model.predict(X_test).argmax(axis=1)
+print(y_pred)
 
+matrix = confusion_matrix(y_test.argmax(axis=1), y_pred)
+df=pd.DataFrame(matrix)
+df.to_csv('conf_mat.csv')
+print(type(matrix))
