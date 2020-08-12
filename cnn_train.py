@@ -89,11 +89,8 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 
 #train the model
 
-<<<<<<< HEAD
+
 model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=100)
-=======
-model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=50)
->>>>>>> 8cd090e5680de92a07b9e17a8ea0473a1f4ab2c5
 
 model.save('single_pd1.h5')
 
