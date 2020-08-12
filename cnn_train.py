@@ -37,13 +37,13 @@ def my_init(shape_array, dtype=None):
 df_train=pd.read_csv('single_train.csv',header=None)
 X_train=df_train.iloc[:,0:-1]
 Y_train=df_train.iloc[:,-1]
-Y_train.astype(str,inplace=True)
+Y_train.astype(str) #,inplace=True
 
 # Load the test data
 df_test=pd.read_csv('single_test.csv',header=None)
 X_test=df_test.iloc[:,0:-1]
 Y_test=df_test.iloc[:,-1]
-Y_test.astype(str,inplace=True)
+Y_test.astype(str) #,inplace=True
 
 # Normalise
 min_max_scaler = preprocessing.Normalizer()
@@ -89,9 +89,13 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 
 #train the model
 
+<<<<<<< HEAD
 model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=100)
+=======
+model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=50)
+>>>>>>> 8cd090e5680de92a07b9e17a8ea0473a1f4ab2c5
 
-model.save('single_pd.h5')
+model.save('single_pd1.h5')
 
 # evaluate the model
 scores = model.evaluate(X_test, y_test, verbose=0)
